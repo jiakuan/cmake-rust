@@ -67,4 +67,9 @@ function(cargo_build)
     add_library(${CARGO_NAME} STATIC IMPORTED GLOBAL)
     add_dependencies(${CARGO_NAME} ${CARGO_NAME}_target)
     set_target_properties(${CARGO_NAME} PROPERTIES IMPORTED_LOCATION ${LIB_FILE})
+
+    # Configure include directory so the generated headers can be used
+    message(STATUS "CARGO_TARGET_DIR: ${CARGO_TARGET_DIR}")
+    set_target_properties(${CARGO_NAME} PROPERTIES NO_SYSTEM_FROM_IMPORTED true)
+    target_include_directories(${CARGO_NAME} INTERFACE ${CARGO_TARGET_DIR})
 endfunction()
