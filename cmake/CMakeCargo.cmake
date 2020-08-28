@@ -1,5 +1,5 @@
 function(cargo_build)
-    cmake_parse_arguments(CARGO "" "NAME" "" ${ARGN})
+    cmake_parse_arguments(CARGO "" "NAME" "SOURCES" ${ARGN})
     string(REPLACE "-" "_" LIB_NAME ${CARGO_NAME})
 
     set(CARGO_TARGET_DIR ${CMAKE_CURRENT_BINARY_DIR})
@@ -53,7 +53,18 @@ function(cargo_build)
         list(APPEND CARGO_ARGS "--release")
     endif()
 
-    file(GLOB_RECURSE LIB_SOURCES "*.rs")
+    #---------------------------------------------------------------------
+    # The file(GLOB) and file(GLOB_RECURSE) commands are some of the
+    # most misused parts of CMake. They should not be used to collect
+    # a set of files to be used as sources, headers or any other set
+    # of files that act as inputs to the build. One of the reasons
+    # this should be avoided is that if files are added or removed,
+    # CMake is not automatically re-run, so the build is unaware of
+    # the change. (See: Professional CMake 7th edition - page 213)
+    #
+    # So, we should use 'SOURCES' arguments to get the source files
+    #---------------------------------------------------------------------
+    #file(GLOB_RECURSE LIB_SOURCES "*.rs")
 
     set(CARGO_ENV_COMMAND ${CMAKE_COMMAND} -E env "CARGO_TARGET_DIR=${CARGO_TARGET_DIR}")
 
@@ -61,7 +72,8 @@ function(cargo_build)
         OUTPUT ${LIB_FILE}
         COMMAND ${CARGO_ENV_COMMAND} ${CARGO_EXECUTABLE} ARGS ${CARGO_ARGS}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        DEPENDS ${LIB_SOURCES}
+        # Use ${CARGO_SOURCES} instead of ${LIB_SOURCES} here
+        DEPENDS ${CARGO_SOURCES}
         COMMENT "running cargo")
     add_custom_target(${CARGO_NAME}_target ALL DEPENDS ${LIB_FILE})
     add_library(${CARGO_NAME} STATIC IMPORTED GLOBAL)
