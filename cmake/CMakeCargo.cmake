@@ -6,9 +6,17 @@ function(cargo_build)
 
     if(WIN32)
         if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(LIB_TARGET "x86_64-pc-windows-msvc")
+            # Building with Clang on Windows in debug mode creates a mismatch
+            # between the c runtime being dynamic release for the rust lib and
+            # dynamic debug for cpp code. No clean solution have been found to
+            # this issue. Using the -gnu target on Windows for the Rust lib and
+            # building with mingw bypasses this.
+            # https://github.com/trondhe/rusty_cmake
+            # set(LIB_TARGET "x86_64-pc-windows-msvc")
+            set(LIB_TARGET "x86_64-pc-windows-gnu")
         else()
-            set(LIB_TARGET "i686-pc-windows-msvc")
+            # set(LIB_TARGET "i686-pc-windows-msvc")
+            set(LIB_TARGET "i686-pc-windows-gnu")
         endif()
     elseif(ANDROID)
         if(ANDROID_SYSROOT_ABI STREQUAL "x86")
