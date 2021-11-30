@@ -14,8 +14,9 @@ function(cargo_build)
             #
             # https://github.com/trondhe/rusty_cmake
             #
-            # But it seems the whole app has to be built with MinGW, so we
-            # are using MSVC with release build only at the moment
+            # But the static lib build by MinGW cannot be linked by MSVC
+            # directly.  Therefore, for now we are using MSVC with release
+            # build only
             set(LIB_TARGET "x86_64-pc-windows-msvc")
             # set(LIB_TARGET "x86_64-pc-windows-gnu")
         else()
