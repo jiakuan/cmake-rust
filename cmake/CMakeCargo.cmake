@@ -16,11 +16,11 @@ function(cargo_build)
             #
             # But it seems the whole app has to be built with MinGW, so we
             # are using MSVC with release build only at the moment
-            # set(LIB_TARGET "x86_64-pc-windows-msvc")
-            set(LIB_TARGET "x86_64-pc-windows-gnu")
+            set(LIB_TARGET "x86_64-pc-windows-msvc")
+            # set(LIB_TARGET "x86_64-pc-windows-gnu")
         else()
-            # set(LIB_TARGET "i686-pc-windows-msvc")
-            set(LIB_TARGET "i686-pc-windows-gnu")
+            set(LIB_TARGET "i686-pc-windows-msvc")
+            # set(LIB_TARGET "i686-pc-windows-gnu")
         endif()
     elseif(ANDROID)
         if(ANDROID_SYSROOT_ABI STREQUAL "x86")
