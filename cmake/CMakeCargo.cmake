@@ -49,9 +49,12 @@ function(cargo_build)
         endif()
     endif()
 
+    # Available built types: Debug, Release, RelWithDebInfo, MinSizeRel
     if(NOT CMAKE_BUILD_TYPE)
         set(LIB_BUILD_TYPE "debug")
-    elseif(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    elseif(${CMAKE_BUILD_TYPE} STREQUAL "Release"
+        OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo"
+        OR ${CMAKE_BUILD_TYPE} STREQUAL "MinSizeRel")
         set(LIB_BUILD_TYPE "release")
     else()
         set(LIB_BUILD_TYPE "debug")
